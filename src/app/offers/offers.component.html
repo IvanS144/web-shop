@@ -1,0 +1,88 @@
+<!-- bočna forma -->
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Filter
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+<div class="container-fluid" [formGroup]="filterByAttributesForm">
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <mat-form-field>
+        <mat-label>Category</mat-label>
+        <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange($event.value)">
+          <ng-container *ngFor="let category of categories">
+            <mat-option [value]="category">
+              {{category.name}}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+
+      </mat-form-field>
+    </div>
+    <div class="col-auto">
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" formControlName="text">
+      </div>
+    </div>
+    <div class="col-auto">
+      <label for="priceFrom" class="form-label">From</label>
+      <input type="number" class="form-control" id="priceFrom" formControlName="priceFrom">
+    </div>
+    <div class="col-auto">
+      <label for="priceTo" class="form-label">To</label>
+      <input type="number" class="form-control" id="priceTo" formControlName="priceTo">
+    </div>
+    <div class="col-auto">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="onlyNewCheckbox" formControlName="onlyNew">
+        <label class="form-check-label" for="onlyNewCheckbox">
+          only new
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="row" formArrayName="attributes">
+    <ng-container *ngFor="let attribute of attributesFormArray.controls; let i = index;">
+      <div class="col-auto" formGroupName="{{i}}">
+        <label class="form-label" for="attributeValue">{{attribute.get('name')?.value}}</label>
+        <input type="text" class="form-control" id="attributeValue" formControlName="value">
+      </div>
+    </ng-container>
+  </div>
+</div>
+</mat-expansion-panel>
+<!-- bocna forma kraj -->
+<!-- prikaz ponuda -->
+<div class="container-md">
+  <div class="row">
+    <ng-container *ngFor="let offer of offers">
+      <div class="col mt-2">
+        <div class="card" style="width: 18rem;">
+          <img src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">Description</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row justify-content-center">
+    <nav class="col-auto" aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <ng-container>
+          <ng-container *ngFor="let pageNumber of [].constructor(totalResults/pageSize); let i = index;">
+            <li class="page-item"><a class="page-link" [ngClass]="i+1 == currentPage? 'active': ''" href="#">{{i+1}}</a></li>
+          </ng-container>
+        </ng-container>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<!-- prikaz ponuda kraj -->
+
