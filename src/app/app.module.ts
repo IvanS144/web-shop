@@ -1,23 +1,38 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ShopHeaderComponent } from './shop-header/shop-header.component';
-import { OffersComponent } from './offers/offers.component';
+import { ShopHeaderComponent } from './components/shop-header/shop-header.component';
+import { OffersComponent } from './components/offers/offers.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatDialogModule} from '@angular/material/dialog';
+
+import { LoginComponent } from './components/modal/login/login.component';
+import { CreateOfferComponent } from './components/create-offer/create-offer.component';
+import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
+import { AccountActivationComponent } from './components/modal/account-activation/account-activation.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+
+export const baseUrl: string = "http://localhost:8080/";
 
 @NgModule({
   declarations: [
     AppComponent,
     ShopHeaderComponent,
-    OffersComponent
+    OffersComponent,
+    LoginComponent,
+    CreateOfferComponent,
+    OfferDetailsComponent,
+    AccountActivationComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
@@ -25,11 +40,13 @@ import {MatInputModule} from '@angular/material/input';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FormsModule,
+    HttpClientModule,
 
     MatExpansionModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

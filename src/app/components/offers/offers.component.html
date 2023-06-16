@@ -1,0 +1,119 @@
+<!-- bočna forma -->
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title> Filter </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div class="container-fluid" [formGroup]="filterByAttributesForm">
+    <div class="row justify-content-start align-items-center">
+      <div class="col-auto my-2">
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control" formControlName="text" />
+        </div>
+      </div>
+      <div class="col-auto my-2">
+        <div class="input-group">
+          <span class="input-group-text">From</span>
+          <!-- <label for="priceFrom" class="form-label">From</label> -->
+          <input type="number" class="form-control" id="priceFrom" formControlName="priceFrom" />
+        </div>
+      </div>
+      <div class="col-auto my-2">
+        <div class="input-group">
+          <span class="input-group-text">To</span>
+          <!-- <label for="priceTo" class="form-label">To</label> -->
+          <input type="number" class="form-control" id="priceTo" formControlName="priceTo" />
+        </div>
+      </div>
+      <div class="row justify-content-start align-items-center">
+        <div class="col-auto my-2">
+          <mat-form-field>
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory" [ngModelOptions]="{ standalone: true }"
+              (selectionChange)="onCategorySelected($event.value)">
+              <ng-container *ngFor="let category of categories">
+                <mat-option [value]="category">
+                  {{ category.name }}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-auto my-2">
+          <div class="form-check">
+            <div class="row"></div>
+            <input class="form-check-input" type="checkbox" id="onlyNewCheckbox" formControlName="onlyNew" />
+            <label class="form-check-label" for="onlyNewCheckbox">
+              only new
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" formArrayName="attributes">
+      <ng-container *ngFor="let attribute of attributesFormArray.controls; let i = index">
+        <div class="col-auto" formGroupName="{{ i }}">
+          <label class="form-label" for="attributeValue">{{
+            attribute.get("name")?.value
+            }}</label>
+          <input type="text" class="form-control" id="attributeValue" formControlName="value" />
+        </div>
+      </ng-container>
+    </div>
+    <button class="btn btn-primary my-2" (click)="sendSearchRequest()">
+      Search
+    </button>
+  </div>
+</mat-expansion-panel>
+<!-- bocna forma kraj -->
+<!-- prikaz ponuda -->
+<div class="container-md">
+  <div class="row justify-content-center align-items-center">
+    <ng-container *ngFor="let offer of offers">
+      <div class="col-auto mt-2">
+        <div class="card" style="width: 18rem">
+          <img
+            src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg"
+            class="card-img-top" />
+          <div class="card-body">
+            <h5 class="card-title">{{ offer.title }}</h5>
+            <p class="card-text">
+              {{ offer.price }}<br />
+              avaliable: {{ offer.quantity }}
+            </p>
+            <a class="btn btn-primary" routerLink="/offers/{{ offer.offerId }}">Details</a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row justify-content-center">
+    <nav class="col-auto" aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <button class="page-link" (click)="sendSearchRequest(currentPage - 1, 10)"
+            [ngClass]="currentPage == 0 ? 'disabled' : ''">
+            Previous
+          </button>
+        </li>
+        <ng-container>
+          <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+            <li class="page-item">
+              <button class="page-link" (click)="sendSearchRequest(i, 10)" [ngClass]="i == currentPage ? 'active' : ''"
+                href="#">
+                {{ i + 1 }}
+              </button>
+            </li>
+          </ng-container>
+        </ng-container>
+        <li class="page-item">
+          <button class="page-link" (click)="sendSearchRequest(currentPage + 1, 10)"
+            [ngClass]="currentPage + 1 == totalPages ? 'disabled' : ''">
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<!-- prikaz ponuda kraj -->

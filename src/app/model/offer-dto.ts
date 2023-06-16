@@ -5,7 +5,7 @@ import { UserDTO } from "./user-dto";
 export interface OfferDTO {
   offerId: number,
   title: string,
-  text: string,
+  description: string,
   price: number,
   location: string,
   isNew: boolean,

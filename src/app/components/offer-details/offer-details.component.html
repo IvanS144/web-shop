@@ -1,0 +1,68 @@
+<div class="container-md">
+  <h1>{{ offer.title }}</h1>
+  <div class="row">
+    <!-- <div class="col">
+      <p>Price: {{offer.price}}<br/>
+         State: {{offer.isNew ? 'new' : 'used'}}<br/>
+         Location: {{offer.location}}<br/>
+         Category: {{offer.categories[0]}}<br/>
+      </p> -->
+    <div class="col">
+      <img class="img-fluid"
+        src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="row justify-content-start">
+        <div class="col-auto my-1">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Price</span>
+            <input type="text" class="form-control" value="{{ offer.price }}" disabled readonly />
+          </div>
+        </div>
+        <div class="col-auto my-1">
+          <div class="input-group mb-3">
+            <span class="input-group-text">State</span>
+            <input type="text" class="form-control" value="{{ offer.isNew ? 'new' : 'used' }}" disabled readonly />
+          </div>
+        </div>
+        <div class="col-auto my-1">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Quantity</span>
+            <input type="text" class="form-control" value="{{ offer.quantity }}" disabled readonly />
+          </div>
+        </div>
+        <div class="col-auto my-1">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Location</span>
+            <input type="text" class="form-control" value="{{ offer.location }}" disabled readonly />
+          </div>
+        </div>
+        <div class="col-auto my-1" *ngIf="offer.categories && offer.categories[0]">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Category</span>
+            <input type="text" class="form-control" value="{{ offer.categories[0].name }}" disabled readonly />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row justify-contend-start align-items-center">
+    <ng-container *ngFor="let offerAttribute of offer.attributes">
+      <div class="col-auto">
+        <div class="input-group mb-3">
+          <span class="input-group-text">{{
+            offerAttribute.attribute.name
+            }}</span>
+          <input type="text" class="form-control" value="{{ offerAttribute.value }}" disabled readonly />
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row">
+    <p>{{ offer.description }}</p>
+  </div>
+  <button class="btn btn-primary" (click)="buy()">Buy</button>
+</div>

@@ -1,4 +1,4 @@
 export interface AttributeDTO {
-  attributeId: number,
+  attributeId: number
   name: string
 }

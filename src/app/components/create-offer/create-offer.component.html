@@ -1,0 +1,35 @@
+<div class="container-md" [formGroup]="createOfferForm">
+  <label for="title" class="form-label">Title</label>
+  <input type="text" class="form-control" id="title" formControlName="title" />
+  <label for="description" class="form-label">Description</label>
+  <textarea class="form-control" id="description" rows="10" formControlName="description"></textarea>
+  <label for="price" class="form-label">Price</label>
+  <input type="number" class="form-control" id="price" formControlName="price" />
+  <label for="quantity" class="form-label">Qyantity</label>
+  <input type="number" class="form-control" id="quantity" formControlName="quantity" />
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="newCheckbox" formControlName="isNew" />
+    <label class="form-check-label" for="newCheckbox"> New </label>
+  </div>
+  <mat-form-field>
+    <mat-label>Category</mat-label>
+    <mat-select [(ngModel)]="selectedCategory" [ngModelOptions]="{ standalone: true }"
+      (selectionChange)="onCategorySelected($event.value)">
+      <ng-container *ngFor="let category of categories">
+        <mat-option [value]="category">
+          {{ category.name }}
+        </mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+  <div formArrayName="attributeRequests">
+    <ng-container *ngFor="let attribute of attributesFormArray.controls; let i = index">
+      <div class="col-auto" formGroupName="{{ i }}">
+        <label class="form-label" for="attributeValue">{{
+          attribute.get("name")?.value
+          }}</label>
+        <input type="text" class="form-control" id="attributeValue" formControlName="value" />
+      </div>
+    </ng-container>
+  </div>
+</div>

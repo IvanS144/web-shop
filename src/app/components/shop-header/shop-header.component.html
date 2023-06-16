@@ -9,11 +9,17 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Categories</a>
+        <li *ngIf="isUserLoggedIn() == false" class="nav-item">
+          <button class="nav-link" (click)="openLoginDialog()">Log in</button><!-- TODO sakriti-->
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Create offer</a>
+        <li *ngIf="isUserLoggedIn()" class="nav-item">
+          <button class="nav-link" (click)="logout()">Log out</button><!-- TODO sakriti-->
+        </li>
+        <li  class="nav-item">
+          <a class="nav-link" routerLink="/create_offer">Create offer</a><!-- TODO sakriti-->
+        </li>
+        <li  class="nav-item">
+          <a class="nav-link" routerLink="/register">Register</a><!-- TODO sakriti-->
         </li>
       </ul>
       <!-- <form class="d-flex" role="search">
