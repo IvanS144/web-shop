@@ -1,0 +1,5 @@
+<div class="container" [formGroup]="answerForm">
+  <label for="text" class="form-label">Enter your message</label>
+  <textarea id="text" class="form-control" rows="10" formControlName="text"></textarea>
+  <button class="btn btn-primary" (click)="sendAnswer()">Send</button>
+</div>

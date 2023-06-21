@@ -15,7 +15,7 @@ import { CategoriesService } from 'src/app/services/categories.service';
 export class OffersComponent {
   selectedCategory?: CategoryDTO //!koristen ?
   offers: OfferDTO[] = []
-  totalPages: number = 10;
+  totalPages: number = 1;
   pageSize: number = 1;
   currentPage: number = 1;
   categories: CategoryDTO[] = []
@@ -46,9 +46,9 @@ export class OffersComponent {
       for (var attribute of this.selectedCategory.attributes) {
         (this.filterByAttributesForm.controls["attributes"] as FormArray).push(this.formBuilder.group(
           {
-            id: this.formBuilder.control(attribute.attributeId),
-            name: this.formBuilder.control(attribute.name),
-            value: this.formBuilder.control('')
+            "attributeId": this.formBuilder.control(attribute.attributeId),
+            "name": this.formBuilder.control(attribute.name),
+            "value": this.formBuilder.control('')
           }
         ))
       }

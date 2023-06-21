@@ -15,11 +15,23 @@
         <li *ngIf="isUserLoggedIn()" class="nav-item">
           <button class="nav-link" (click)="logout()">Log out</button><!-- TODO sakriti-->
         </li>
-        <li  class="nav-item">
+        <li  *ngIf="isUserLoggedIn()" class="nav-item">
           <a class="nav-link" routerLink="/create_offer">Create offer</a><!-- TODO sakriti-->
         </li>
-        <li  class="nav-item">
+        <li *ngIf="isUserLoggedIn()==false"  class="nav-item">
           <a class="nav-link" routerLink="/register">Register</a><!-- TODO sakriti-->
+        </li>
+        <li *ngIf="isUserLoggedIn()" class="nav-item">
+          <a class="nav-link" routerLink="/my_offers">My offers</a><!-- TODO sakriti-->
+        </li>
+        <li *ngIf="isUserLoggedIn()" class="nav-item">
+          <a class="nav-link" routerLink="/my_purchases">My purchases</a><!-- TODO sakriti-->
+        </li>
+        <li *ngIf="isUserLoggedIn()" class="nav-item">
+          <a class="nav-link" routerLink="/profile">Account</a>
+        </li>
+        <li *ngIf="isUserLoggedIn()" class="nav-item">
+          <button class="nav-link" (click)="contactSupport()">Contact support</button>
         </li>
       </ul>
       <!-- <form class="d-flex" role="search">

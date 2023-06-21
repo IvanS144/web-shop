@@ -20,15 +20,19 @@ export class CreateOfferComponent {
     "description": this.formBuilder.control(''),
     "price": this.formBuilder.control(0),
     "isNew": this.formBuilder.control(false),
+    "quantity": this.formBuilder.control(0),
+    "location": this.formBuilder.control(''),
     "categoryIds": this.formBuilder.control([0]),
-    "attributeRequests": this.formBuilder.array([])
+    "attributeRequests": this.formBuilder.array([]),
+    "userId": this.formBuilder.control(0)
   })
 
   get attributesFormArray(): FormArray{
-    return (this.createOfferForm.controls["attributes"] as FormArray)
+    return (this.createOfferForm.controls["attributeRequests"] as FormArray)
   }
 
-  selectedCategory?: CategoryDTO
+  selectedCategory?: CategoryDTO //! ?
+  selectedFiles!: FileList //! !
   categories: CategoryDTO[] = []
   // [{
   //   "categoryId": 1,
@@ -88,9 +92,9 @@ export class CreateOfferComponent {
     for(var attribute of category.attributes){
       this.attributesFormArray.push(this.formBuilder.group(
         {
-          id: this.formBuilder.control(attribute.attributeId),
-          name: this.formBuilder.control(attribute.name),
-          value: this.formBuilder.control('')
+          "attributeId": this.formBuilder.control(attribute.attributeId),
+          "name": this.formBuilder.control(attribute.name),
+          "value": this.formBuilder.control('')
         }
       ))
     }
@@ -102,6 +106,26 @@ export class CreateOfferComponent {
     this.offersService.create(this.createOfferForm.value)
     .subscribe({
       next: (offer: OfferDTO) => console.log(offer),
+      error: (err: HttpErrorResponse) => console.log(err)
+    })
+  }
+
+  onFilesSelected(e: any){
+    this.selectedFiles = e.target.files
+
+  }
+
+  createOffer(){
+    this.createOfferForm.patchValue({"categoryIds": [this.selectedCategory?.categoryId]})
+    let userId = parseInt(localStorage.getItem("userId") ?? "0")//! popraviti
+    this.createOfferForm.patchValue({"userId" : userId})
+    this.offersService.create(this.createOfferForm.value)
+    .subscribe({
+      next: (data: OfferDTO) =>{
+        this.offersService.uploadImages(this.selectedFiles, data.offerId).subscribe({
+          error: (err: HttpErrorResponse) => console.log(err)
+        })
+      },
       error: (err: HttpErrorResponse) => console.log(err)
     })
   }

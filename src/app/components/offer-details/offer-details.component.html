@@ -1,16 +1,18 @@
-<div class="container-md">
-  <h1>{{ offer.title }}</h1>
-  <div class="row">
-    <!-- <div class="col">
-      <p>Price: {{offer.price}}<br/>
-         State: {{offer.isNew ? 'new' : 'used'}}<br/>
-         Location: {{offer.location}}<br/>
-         Category: {{offer.categories[0]}}<br/>
-      </p> -->
-    <div class="col">
-      <img class="img-fluid"
-        src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg" />
-    </div>
+<ng-container *ngIf="offer">
+  <div class="container-md">
+    <h1>{{ offer.title }}<span *ngIf="offer.deleted == true" class="badge text-bg-danger">Deleted</span><span *ngIf="offer.quantity == 0"
+      class="badge text-bg-info">Concluded</span></h1>
+    <div class="row">
+      <!-- <div class="col">
+        <p>Price: {{offer.price}}<br/>
+          State: {{offer.isNew ? 'new' : 'used'}}<br/>
+          Location: {{offer.location}}<br/>
+          Category: {{offer.categories[0]}}<br/>
+        </p> -->
+        <div class="col">
+          <img class="img-fluid"
+          src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg" />
+        </div>
   </div>
   <div class="row">
     <div class="col">
@@ -55,7 +57,7 @@
         <div class="input-group mb-3">
           <span class="input-group-text">{{
             offerAttribute.attribute.name
-            }}</span>
+          }}</span>
           <input type="text" class="form-control" value="{{ offerAttribute.value }}" disabled readonly />
         </div>
       </div>
@@ -64,5 +66,35 @@
   <div class="row">
     <p>{{ offer.description }}</p>
   </div>
-  <button class="btn btn-primary" (click)="buy()">Buy</button>
+  <button *ngIf="isUserOwner()==false && offer.quantity>0" class="btn btn-primary" (click)="buy()">Buy</button>
+  <ng-container *ngIf="isUserOwner">
+    <button *ngIf="offer.deleted==false; else undoButton" class="btn btn-danger" (click)="delete()">Delete</button>
+    <ng-template #undoButton>
+      <button class="btn btn-secondary" (click)="undoDeletion()">Undo deletion</button>
+    </ng-template>
+  </ng-container>
 </div>
+<div class="container-md" *ngIf="isUserLoggedIn()==true && isUserOwner()==false" [formGroup]="questionForm">
+  <label for="question" class="form-label">Ask question</label>
+  <textarea class="form-control" id="question" formControlName="text" rows="10"></textarea>
+  <button class="btn btn-primary" (click)="sendQuestion()">Send</button>
+</div>
+<div class="container-md">
+  <ng-container *ngFor="let question of offer.questions">
+    <div class="row justify-content-start">
+      <div *ngIf="question.user.avatar" class="col-1">
+        <img src="http://localhost:8080/files/avatars/{{question.user.avatar.avatarId}}" class="avatar-image">
+      </div>
+      <div class="col bg-info">
+        <p>{{question.text}}</p>
+        <button *ngIf="isUserOwner()" class="btn btn-info" (click)="openAnswerDialog(question)" [disabled]="question.answer">Answer</button>
+      </div>
+      <div class="row justify-content-end" *ngIf="question.answer">
+        <div class="col-10 bg-warning">
+          <p>{{question.answer.text}}</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+</ng-container>

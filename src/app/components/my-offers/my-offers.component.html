@@ -1,0 +1,61 @@
+<div class="container-md">
+  <div class="row justify-content-center align-items-center">
+    <ng-container *ngFor="let offer of offers">
+      <div class="col-auto mt-2">
+        <div class="card" style="width: 18rem">
+          <ng-container *ngIf="offer.pictures && offer.pictures.length>0; else placeholderImage">
+            <img
+            src="http://localhost:8080/files/pictures/{{offer.pictures[0].pictureId}}"
+            class="card-img-top" />
+          </ng-container>
+          <ng-template #placeholderImage>
+<a title="Flanoz, CC0, via Wikimedia Commons"
+  href="https://commons.wikimedia.org/wiki/File:Placeholder_view_vector.svg"><img
+    alt="Placeholder view vector"
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/256px-Placeholder_view_vector.svg.png" class="card-img-top"></a>
+          </ng-template>
+          <div class="card-body">
+            <h4 class="card-title">{{ offer.title }}<span *ngIf="offer.deleted == true" class="badge text-bg-danger">Deleted</span><span *ngIf="offer.quantity == 0" class="badge text-bg-info">Concluded</span></h4>
+            <p class="card-text">
+              {{ offer.price }}<br />
+              avaliable: {{ offer.quantity }}
+            </p>
+            <a class="btn btn-primary" routerLink="/offers/{{ offer.offerId }}">Details</a>
+            <button *ngIf="offer.deleted==false; else undoButton" class="btn btn-danger" (click)="delete(offer)">Delete</button>
+            <ng-template #undoButton>
+              <button class="btn btn-secondary" (click)="undoDeletion(offer)">Undo deletion</button>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row justify-content-center">
+    <nav class="col-auto" aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <button class="page-link" (click)="getOffers(currentPage - 1, 10)"
+            [ngClass]="currentPage == 0 ? 'disabled' : ''">
+            Previous
+          </button>
+        </li>
+        <ng-container>
+          <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+            <li class="page-item">
+              <button class="page-link" (click)="getOffers(i, 10)" [ngClass]="i == currentPage ? 'active' : ''"
+                href="#">
+                {{ i + 1 }}
+              </button>
+            </li>
+          </ng-container>
+        </ng-container>
+        <li class="page-item">
+          <button class="page-link" (click)="getOffers(currentPage + 1, 10)"
+            [ngClass]="currentPage + 1 == totalPages ? 'disabled' : ''">
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

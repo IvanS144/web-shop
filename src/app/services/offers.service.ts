@@ -30,5 +30,25 @@ export class OffersService {
     return this.http.post<OfferDTO>(`${baseUrl}/offers`, offerRequest)
   }
 
+  uploadImages(files: FileList, offerId: number){
+    const formData: FormData = new FormData()
+    for(let i = 0; i<files.length;i++){
+      formData.append('files', files[i])
+    }
+    return this.http.post(`${baseUrl}/files/pictures/offers/${offerId}`, formData)
+  }
+
+  getByUserId(id: number | string, page: number, pageSize: number): Observable<OffersPage>{
+    return this.http.get<OffersPage>(`${baseUrl}/offers/users/${id}?page=${page}&page_size=${pageSize}`)
+  }
+
+  deleteById(id: number){
+    return this.http.delete(`${baseUrl}/offers/${id}`)
+  }
+
+  undoDeleteById(id: number){
+    return this.http.patch(`${baseUrl}/offers/${id}`, {"deleted": false})
+  }
+
 
 }

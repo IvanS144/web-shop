@@ -29,14 +29,15 @@ export class LoginComponent {
         this.dialogRef.close()
         }
         else{
-          let dialogRef = this.dialog.open(AccountActivationComponent, {
+          let dialogRefActivation = this.dialog.open(AccountActivationComponent, {
             data
           })
 
-          dialogRef.afterClosed().subscribe(
+          dialogRefActivation.afterClosed().subscribe(
             (activated: boolean) => {
               if(activated){
               localStorage.setItem("userId", data.userId.toString())
+              this.dialogRef.close()
               }
             }
           )

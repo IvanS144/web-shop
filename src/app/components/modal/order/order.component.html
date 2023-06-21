@@ -1,0 +1,20 @@
+<div class="container" [formGroup]="orderForm">
+<label for="quantity" class="form-label">Quantity</label>
+<input type="number" min="1" max="{{offer.quantity}}" class="form-control" id="quantity" formControlName="quantity">/{{offer.quantity}}
+<mat-form-field>
+  <mat-label>Payment option</mat-label>
+  <mat-select [(ngModel)]="selectedPaymentOption" [ngModelOptions]="{ standalone: true }"
+    (selectionChange)="onPaymentOptionSelected($event.value)">
+    <ng-container *ngFor="let paymentOption of paymentOptions">
+      <mat-option [value]="paymentOptions">
+        {{ paymentOption.name }}
+      </mat-option>
+    </ng-container>
+  </mat-select>
+</mat-form-field>
+<ng-container *ngIf="cardRequired == true">
+  <label for="card" class="form-label">Card number</label>
+  <input type="text" class="form-control" id="card">
+</ng-container>
+<button class="btn btn-primaty" (click)="sendPurchaseRequest()">Continue</button>
+</div>

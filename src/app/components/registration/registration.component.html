@@ -9,5 +9,18 @@
   <input type="text" class="form-control" id="userName" formControlName="userName" />
   <label for="passowrd" class="form-label">Password</label>
   <input type="password" class="form-control" id="password" formControlName="password" />
-  <button class="btn btn-primary mt-3">Register</button>
+  <mat-form-field>
+    <mat-label>City</mat-label>
+    <mat-select [(ngModel)]="selectedCity" [ngModelOptions]="{ standalone: true }"
+      (selectionChange)="onCitySelected($event.value)">
+      <ng-container *ngFor="let city of cities">
+        <mat-option [value]="city">
+          {{ city.name }}
+        </mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+  <label for="avatar" class="form-label">Avatar</label>
+  <input type="file" class="form-control" id="avatar" (change)="onAvatarSelected($event)">
+  <button class="btn btn-primary mt-3" (click)="register()">Register</button>
 </div>

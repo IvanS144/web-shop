@@ -20,6 +20,12 @@ import { CreateOfferComponent } from './components/create-offer/create-offer.com
 import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
 import { AccountActivationComponent } from './components/modal/account-activation/account-activation.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { OrderComponent } from './components/modal/order/order.component';
+import { MyOffersComponent } from './components/my-offers/my-offers.component';
+import { MyPurchasesComponent } from './components/my-purchases/my-purchases.component';
+import { SupportComponent } from './components/modal/support/support.component';
+import { AnswerComponent } from './components/modal/answer/answer.component';
 
 export const baseUrl: string = "http://localhost:8080/";
 
@@ -32,7 +38,13 @@ export const baseUrl: string = "http://localhost:8080/";
     CreateOfferComponent,
     OfferDetailsComponent,
     AccountActivationComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ProfileComponent,
+    OrderComponent,
+    MyOffersComponent,
+    MyPurchasesComponent,
+    SupportComponent,
+    AnswerComponent
   ],
   imports: [
     BrowserModule,

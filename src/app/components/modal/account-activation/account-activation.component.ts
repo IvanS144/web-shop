@@ -19,8 +19,10 @@ export class AccountActivationComponent {
   })
 
   activate(){
-    let userId = localStorage.getItem("userId")
-    this.activationForm.patchValue({"userId": userId})
+    //let userId = localStorage.getItem("userId")
+    console.log(this.user)
+    this.activationForm.patchValue({"userId": this.user.userId})
+    console.log(this.activationForm.value)
     this.loginService.activate(this.activationForm.value, this.user.userId).subscribe({
       next: (data: UserDTO) => this.dialogRef.close(true),
       error: (err: HttpErrorResponse) => console.log(err)

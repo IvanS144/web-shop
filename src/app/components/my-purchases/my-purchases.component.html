@@ -1,0 +1,49 @@
+<div class="container-md">
+  <div class="row justify-content-center align-items-center">
+    <ng-container *ngFor="let purchase of purchases">
+      <div class="col-auto mt-2">
+        <div class="card" style="width: 18rem">
+          <img
+            src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg"
+            class="card-img-top" />
+          <div class="card-body">
+            <h5 class="card-title">{{ purchase.offer.title }}</h5>
+            <p class="card-text">
+              {{ purchase.offer.price }}<br />
+              quanity: {{ purchase.quantity }}
+            </p>
+            <a class="btn btn-primary" routerLink="/offers/{{ purchase.offer.offerId }}">Offer details</a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row justify-content-center">
+    <nav class="col-auto" aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <button class="page-link" (click)="getPurchases(currentPage - 1, 10)"
+            [ngClass]="currentPage == 0 ? 'disabled' : ''">
+            Previous
+          </button>
+        </li>
+        <ng-container>
+          <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
+            <li class="page-item">
+              <button class="page-link" (click)="getPurchases(i, 10)" [ngClass]="i == currentPage ? 'active' : ''"
+                href="#">
+                {{ i + 1 }}
+              </button>
+            </li>
+          </ng-container>
+        </ng-container>
+        <li class="page-item">
+          <button class="page-link" (click)="getPurchases(currentPage + 1, 10)"
+            [ngClass]="currentPage + 1 == totalPages ? 'disabled' : ''">
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 <div class="container" [formGroup]="activationForm">
-  <label for="pin" class="form-label">User name</label>
+  <label for="pin" class="form-label">Enter pin</label>
   <input type="text" class="form-control" id="pin" formControlName="pin">
+  <button class="btn btn-primary" (click)="activate()">Continute</button>
 </div>

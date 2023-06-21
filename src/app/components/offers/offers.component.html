@@ -72,9 +72,15 @@
     <ng-container *ngFor="let offer of offers">
       <div class="col-auto mt-2">
         <div class="card" style="width: 18rem">
-          <img
-            src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg"
-            class="card-img-top" />
+          <ng-container *ngIf="offer.pictures && offer.pictures.length>0; else placeholderImage">
+            <img src="http://localhost:8080/files/pictures/{{offer.pictures[0].pictureId}}" class="card-img-top" />
+          </ng-container>
+          <ng-template #placeholderImage>
+            <a title="Flanoz, CC0, via Wikimedia Commons"
+              href="https://commons.wikimedia.org/wiki/File:Placeholder_view_vector.svg"><img alt="Placeholder view vector"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/256px-Placeholder_view_vector.svg.png"
+                class="card-img-top"></a>
+          </ng-template>
           <div class="card-body">
             <h5 class="card-title">{{ offer.title }}</h5>
             <p class="card-text">

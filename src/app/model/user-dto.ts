@@ -1,3 +1,4 @@
+import { AvatarDTO } from "./avatar-dto"
 import { CityDTO } from "./city-dto"
 
 export interface UserDTO {
@@ -7,5 +8,7 @@ export interface UserDTO {
   email: string,
   userName: string,
   activated: boolean
+  password: string
   city: CityDTO
+  avatar: AvatarDTO
 }

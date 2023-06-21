@@ -5,6 +5,7 @@ import { LoginRequest } from '../model/login-request';
 import { UserDTO } from '../model/user-dto';
 import { baseUrl } from '../app.module';
 import { ActivationRequest } from '../model/activation-request';
+import { UserRequest } from '../model/user-request';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,8 @@ export class LoginService {
     return this.http.post<UserDTO>(`${baseUrl}/login`, loginRequest)
   }
 
-  register(userDTO: UserDTO): Observable<UserDTO>{
-    return this.http.post<UserDTO>(`${baseUrl}/users`, userDTO)
+  register(userRequest: UserRequest): Observable<UserDTO>{
+    return this.http.post<UserDTO>(`${baseUrl}/users`, userRequest)
   }
 
   activate(activationRequest: ActivationRequest, id: number): Observable<UserDTO>{

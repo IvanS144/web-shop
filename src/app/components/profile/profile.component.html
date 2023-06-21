@@ -1,0 +1,27 @@
+<div class="container-md" [formGroup]="profileForm" *ngIf="user">
+  <label for="firstName" class="form-label">First name</label>
+  <input type="text" class="form-control" id="firstName" formControlName="firstName" [disabled]="editMode==false" />
+  <label for="lastName" class="form-label">Last name</label>
+  <input type="text" class="form-control" id="lastName" formControlName="lastName" [disabled]="editMode==false" />
+  <label for="email" class="form-label">Email</label>
+  <input type="text" class="form-control" id="email" formControlName="email" [disabled]="editMode==false"/>
+  <label for="passowrd" class="form-label">Password</label>
+  <input type="password" class="form-control" id="password" formControlName="password" [disabled]="editMode==false"/>
+  <mat-form-field>
+    <mat-label>City</mat-label>
+    <mat-select [(ngModel)]="selectedCity" [ngModelOptions]="{ standalone: true }" [compareWith]="compareCities"
+      (selectionChange)="onCitySelected($event.value)" [disabled]="editMode==false">
+      <ng-container *ngFor="let city of cities">
+        <mat-option [value]="city">
+          {{ city.name }}
+        </mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="editMode==true">
+    <label for="avatar" class="form-label">Change avatar</label>
+    <input type="file" class="form-control" id="avatar" (change)="onAvatarSelected($event)">
+  </ng-container>
+  <button *ngIf="editMode == true" class="btn btn-peimary mt-3" (click)="sendEditRequest()">Ok</button>
+  <button class="btn btn-primary mt-3" (click)="toggleEditMode()">{{editButtonText}}</button>
+</div>
