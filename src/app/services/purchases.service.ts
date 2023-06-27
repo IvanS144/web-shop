@@ -18,6 +18,6 @@ export class PurchasesService {
   }
 
   getByUserId(id: number | string, page: number, pageSize: number): Observable<PurchasesPage>{
-    return this.http.get<PurchasesPage>(`${baseUrl}/purchases/users/${id}}?page=${page}&page_size=${pageSize}`)
+    return this.http.get<PurchasesPage>(`${baseUrl}/purchases/users/${id}?page=${page}&page_size=${pageSize}`)
   }
 }

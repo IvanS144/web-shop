@@ -7,6 +7,8 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { MyOffersComponent } from './components/my-offers/my-offers.component';
 import { MyPurchasesComponent } from './components/my-purchases/my-purchases.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { AuthGuard } from './guards/auth.guard';
+import { ContactSupportComponent } from './components/contact-support/contact-support.component';
 
 const routes: Routes = [{
   path: '',
@@ -14,7 +16,8 @@ const routes: Routes = [{
 },
 {
   path: 'create_offer',
-  component: CreateOfferComponent
+  component: CreateOfferComponent,
+  canActivate: [AuthGuard]
 },
 {
   path: 'offers/:id',
@@ -26,15 +29,23 @@ const routes: Routes = [{
 },
 {
   path : 'my_offers',
-  component: MyOffersComponent
+  component: MyOffersComponent,
+  canActivate: [AuthGuard]
 },
 {
   path: 'my_purchases',
-  component: MyPurchasesComponent
+  component: MyPurchasesComponent,
+  canActivate: [AuthGuard]
 },
 {
   path:'profile',
-  component: ProfileComponent
+  component: ProfileComponent,
+  canActivate: [AuthGuard]
+},
+{
+  path: 'support',
+  component: ContactSupportComponent,
+  canActivate: [AuthGuard]
 }
 ];
 

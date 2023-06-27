@@ -7,20 +7,20 @@
     <div class="row justify-content-start align-items-center">
       <div class="col-auto my-2">
         <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <span class="input-group-text span-60"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control" formControlName="text" />
         </div>
       </div>
       <div class="col-auto my-2">
         <div class="input-group">
-          <span class="input-group-text">From</span>
+          <span class="input-group-text span-60">From</span>
           <!-- <label for="priceFrom" class="form-label">From</label> -->
           <input type="number" class="form-control" id="priceFrom" formControlName="priceFrom" />
         </div>
       </div>
       <div class="col-auto my-2">
         <div class="input-group">
-          <span class="input-group-text">To</span>
+          <span class="input-group-text span-60">To</span>
           <!-- <label for="priceTo" class="form-label">To</label> -->
           <input type="number" class="form-control" id="priceTo" formControlName="priceTo" />
         </div>
@@ -31,6 +31,7 @@
             <mat-label>Category</mat-label>
             <mat-select [(ngModel)]="selectedCategory" [ngModelOptions]="{ standalone: true }"
               (selectionChange)="onCategorySelected($event.value)">
+              <mat-option>All</mat-option>
               <ng-container *ngFor="let category of categories">
                 <mat-option [value]="category">
                   {{ category.name }}
@@ -43,8 +44,8 @@
           <div class="form-check">
             <div class="row"></div>
             <input class="form-check-input" type="checkbox" id="onlyNewCheckbox" formControlName="onlyNew" />
-            <label class="form-check-label" for="onlyNewCheckbox">
-              only new
+            <label class="form-check-label font-16" for="onlyNewCheckbox">
+              Only new
             </label>
           </div>
         </div>
@@ -60,31 +61,53 @@
         </div>
       </ng-container>
     </div>
-    <button class="btn btn-primary my-2" (click)="sendSearchRequest()">
+    <div *ngIf="priceFrom?.invalid && (priceFrom?.dirty || priceFrom?.touched)" class="alert alert-danger">
+
+      <div *ngIf="priceFrom?.errors?.['notPositiveOrNull']">
+        'From price' must be positive.
+      </div>
+    </div>
+    <div *ngIf="priceTo?.invalid && (priceTo?.dirty || priceTo?.touched)" class="alert alert-danger">
+
+      <div *ngIf="priceTo?.errors?.['notPositiveOrNull']">
+        'To price' must be positive.
+      </div>
+    </div>
+    <div *ngIf="filterByAttributesForm.errors?.['priceRange'] && (filterByAttributesForm.touched || filterByAttributesForm.dirty)"
+      class="cross-validation-error-message alert alert-danger">
+      Price to must be greater than price from.
+    </div>
+    <button class="btn btn-primary my-2 me-1" (click)="sendSearchRequest(0,10,true)" [disabled]="filterByAttributesForm.invalid">
       Search
+    </button>
+    <button *ngIf="filterByAttributesForm.pristine==false || selectedCategory" class="btn btn-secondary my-2" (click)="clear()">
+      Clear form
     </button>
   </div>
 </mat-expansion-panel>
 <!-- bocna forma kraj -->
 <!-- prikaz ponuda -->
 <div class="container-md">
+  <div *ngIf="filterMode == true" class="row justify-content-center align-items-center alert alert-info">
+    <p class="col-auto">Viewing filtered offers</p> <button class="btn btn-info col-auto" (click)="clearFilters()">Click to clear filters</button>
+  </div>
   <div class="row justify-content-center align-items-center">
     <ng-container *ngFor="let offer of offers">
       <div class="col-auto mt-2">
         <div class="card" style="width: 18rem">
           <ng-container *ngIf="offer.pictures && offer.pictures.length>0; else placeholderImage">
-            <img src="http://localhost:8080/files/pictures/{{offer.pictures[0].pictureId}}" class="card-img-top" />
+            <img src="http://localhost:9000/files/pictures/{{offer.pictures[0].pictureId}}" class="card-img-top" style="height: 222px; object-fit:contain" />
           </ng-container>
           <ng-template #placeholderImage>
             <a title="Flanoz, CC0, via Wikimedia Commons"
               href="https://commons.wikimedia.org/wiki/File:Placeholder_view_vector.svg"><img alt="Placeholder view vector"
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/256px-Placeholder_view_vector.svg.png"
-                class="card-img-top"></a>
+                class="card-img-top" style="height: 222px; object-fit:contain"></a>
           </ng-template>
           <div class="card-body">
-            <h5 class="card-title">{{ offer.title }}</h5>
+            <h4 class="card-title">{{ offer.title }}</h4>
             <p class="card-text">
-              {{ offer.price }}<br />
+              {{ offer.price }}$<br />
               avaliable: {{ offer.quantity }}
             </p>
             <a class="btn btn-primary" routerLink="/offers/{{ offer.offerId }}">Details</a>
@@ -93,11 +116,12 @@
       </div>
     </ng-container>
   </div>
-  <div class="row justify-content-center">
-    <nav class="col-auto" aria-label="Page navigation example">
+  <!-- stranice -->
+  <div *ngIf="offers.length>0" class="row justify-content-center centrirano my-2">
+    <nav class="col-auto">
       <ul class="pagination">
         <li class="page-item">
-          <button class="page-link" (click)="sendSearchRequest(currentPage - 1, 10)"
+          <button class="page-link" (click)="sendSearchRequest(currentPage - 1, 10, filterMode)"
             [ngClass]="currentPage == 0 ? 'disabled' : ''">
             Previous
           </button>
@@ -105,7 +129,7 @@
         <ng-container>
           <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let i = index">
             <li class="page-item">
-              <button class="page-link" (click)="sendSearchRequest(i, 10)" [ngClass]="i == currentPage ? 'active' : ''"
+              <button class="page-link" (click)="sendSearchRequest(i, 10, filterMode)" [ngClass]="i == currentPage ? 'active' : ''"
                 href="#">
                 {{ i + 1 }}
               </button>
@@ -113,7 +137,7 @@
           </ng-container>
         </ng-container>
         <li class="page-item">
-          <button class="page-link" (click)="sendSearchRequest(currentPage + 1, 10)"
+          <button class="page-link" (click)="sendSearchRequest(currentPage + 1, 10, filterMode)"
             [ngClass]="currentPage + 1 == totalPages ? 'disabled' : ''">
             Next
           </button>

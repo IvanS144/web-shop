@@ -1,7 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { notEmptyNotBlankRegex } from 'src/app/app.module';
 import { CityDTO } from 'src/app/model/city-dto';
 import { UserDTO } from 'src/app/model/user-dto';
 import { AvatarsService } from 'src/app/services/avatars.service';
@@ -14,18 +16,40 @@ import { UsersService } from 'src/app/services/users.service';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-constructor(private usersService: UsersService, private formBuilder: FormBuilder, private citiesService: CitiesService, private avatarsService: AvatarsService){}
+constructor(private usersService: UsersService, private formBuilder: FormBuilder, private citiesService: CitiesService, private avatarsService: AvatarsService, private snackBar: MatSnackBar){}
 
 user?: UserDTO
 editMode: boolean = false
 profileForm: FormGroup = this.formBuilder.group({
-    "firstName" : [{value: '', disabled: true}],
-    "lastName" : [{value: '', disabled: true}],
-    "email" : [{value: '', disabled: true}],
-    "userName": [{value: '', disabled: true}],
-    "password": [{value: '', disabled: true}],
-    "cityId": [{value: 1, disabled: true}]
+    "firstName" : [{value: '', disabled: true}, [Validators.required]],
+    "lastName" : [{value: '', disabled: true},[Validators.required, Validators.pattern(notEmptyNotBlankRegex)]],
+    "email" : [{value: '', disabled: true},[Validators.required, Validators.email]],
+    "userName": [{value: '', disabled: true}],//! required?
+    "password": [{value: '', disabled: true},[Validators.required, Validators.pattern(notEmptyNotBlankRegex)]],
+    "cityId": [{value: 1, disabled: true}],
   })
+
+  get firstName(){
+    return this.profileForm.get('firstName')
+  }
+
+  get lastName(){
+    return this.profileForm.get('lastName')
+  }
+
+  get email(){
+    return this.profileForm.get('email')
+  }
+
+  get password(){
+    return this.profileForm.get('password')
+  }
+
+  get cityId(){
+    return this.profileForm.get('cityId')
+  }
+
+
 selectedCity!: CityDTO
 cities: CityDTO[] = []
 editButtonText: string = "Edit"
@@ -78,14 +102,15 @@ sendEditRequest(){
   if(this.user){
     this.usersService.update(this.user.userId, this.profileForm.value).subscribe({
       next: (data: UserDTO) => {
+        this.snackBar.open('Account updated', 'OK', {duration:5000})
         this.user = data
         this.syncForm(data)
-        // if(this.avatar){
-        // this.avatarsService.uploadAvatar(this.avatar, data.userId).subscribe({
-        //   next: (id: any) =>{},
-        //   error: (err: HttpErrorResponse) => console.log(err)
-        // })
-        // }
+        if(this.avatar){
+        this.avatarsService.uploadAvatar(this.avatar, data.userId).subscribe({
+          next: (id: any) =>{if(this.user){this.user.avatar.avatarId=id};},
+          error: (err: HttpErrorResponse) => console.log(err)
+        })
+        }
       },
       error: (err: HttpErrorResponse) => console.log(err)
     })

@@ -1,100 +1,163 @@
 <ng-container *ngIf="offer">
-  <div class="container-md">
-    <h1>{{ offer.title }}<span *ngIf="offer.deleted == true" class="badge text-bg-danger">Deleted</span><span *ngIf="offer.quantity == 0"
-      class="badge text-bg-info">Concluded</span></h1>
-    <div class="row">
+  <div class="container-md mb-3">
+    <h1>{{ offer.title }}<span *ngIf="offer.deleted == true" class="badge text-bg-danger mx-2">Deleted</span><span *ngIf="offer.quantity == 0"
+      class="badge text-bg-info mx-2">Concluded</span></h1>
+    <div class="row justify-content-center" *ngIf="offer.pictures">
       <!-- <div class="col">
         <p>Price: {{offer.price}}<br/>
           State: {{offer.isNew ? 'new' : 'used'}}<br/>
           Location: {{offer.location}}<br/>
           Category: {{offer.categories[0]}}<br/>
         </p> -->
-        <div class="col">
+        <!-- <div class="col centrirano">
           <img class="img-fluid"
           src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg" />
+        </div> -->
+        <div id="carousel" class="carousel slide">
+          <div class="carousel-inner">
+            <ng-container *ngFor="let picture of offer.pictures; let i = index">
+              <div class="carousel-item bg-info-subtle" [ngClass]="i == 0? 'active':'' ">
+                <img class="offer-image" src="http://localhost:9000/files/pictures/{{picture.pictureId}}" style="height: 500px; object-fit:contain">
+              </div>
+            </ng-container>
+          </div>
+          <button class="carousel-control-prev blue-text" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon blue-text"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </button>
         </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <div class="row justify-content-start">
+  <div class="row my-3 font-16">
+    <p>{{ offer.description }}</p>
+  </div>
+  <div class="row justify-content-start">
+    <!-- <div class="col align-items-start"> -->
+      <!-- <div class="row justify-content-start"> -->
         <div class="col-auto my-1">
           <div class="input-group mb-3">
-            <span class="input-group-text">Price</span>
-            <input type="text" class="form-control" value="{{ offer.price }}" disabled readonly />
+            <span class="input-group-text span-92">Price</span>
+            <input type="text" class="form-control osobina" value="{{ offer.price }}$" disabled readonly />
           </div>
         </div>
         <div class="col-auto my-1">
           <div class="input-group mb-3">
-            <span class="input-group-text">State</span>
-            <input type="text" class="form-control" value="{{ offer.isNew ? 'new' : 'used' }}" disabled readonly />
+            <span class="input-group-text span-92">State</span>
+            <input type="text" class="form-control osobina" value="{{ offer.isNew ? 'new' : 'used' }}" disabled readonly />
           </div>
         </div>
         <div class="col-auto my-1">
           <div class="input-group mb-3">
-            <span class="input-group-text">Quantity</span>
-            <input type="text" class="form-control" value="{{ offer.quantity }}" disabled readonly />
+            <span class="input-group-text span-92">Quantity</span>
+            <input type="text" class="form-control osobina" value="{{ offer.quantity }}" disabled readonly />
           </div>
         </div>
         <div class="col-auto my-1">
           <div class="input-group mb-3">
-            <span class="input-group-text">Location</span>
-            <input type="text" class="form-control" value="{{ offer.location }}" disabled readonly />
+            <span class="input-group-text span-92">Location</span>
+            <input type="text" class="form-control osobina" value="{{ offer.location }}" disabled readonly />
           </div>
         </div>
         <div class="col-auto my-1" *ngIf="offer.categories && offer.categories[0]">
           <div class="input-group mb-3">
-            <span class="input-group-text">Category</span>
-            <input type="text" class="form-control" value="{{ offer.categories[0].name }}" disabled readonly />
+            <span class="input-group-text span-92">Category</span>
+            <input type="text" class="form-control osobina" value="{{ offer.categories[0].name }}" disabled readonly />
           </div>
         </div>
-      </div>
-    </div>
+      <!-- </div> -->
+    <!-- </div> -->
   </div>
-  <hr />
-  <div class="row justify-contend-start align-items-center">
+  <div class="row">
+    <h2>Details</h2>
     <ng-container *ngFor="let offerAttribute of offer.attributes">
-      <div class="col-auto">
+      <!-- <div class="row"> -->
+        <div class="col-auto my-1">
         <div class="input-group mb-3">
           <span class="input-group-text">{{
             offerAttribute.attribute.name
           }}</span>
-          <input type="text" class="form-control" value="{{ offerAttribute.value }}" disabled readonly />
+          <input type="text" class="form-control osobina" value="{{ offerAttribute.value }}" disabled readonly />
         </div>
-      </div>
+        </div>
+      <!-- </div> -->
     </ng-container>
   </div>
-  <div class="row">
-    <p>{{ offer.description }}</p>
+  <div class="row mt-3">
+    <h2>Dealer</h2>
+    <div clas="col-3">
+      <img *ngIf="offer.user.avatar; else placeholderAvatar"
+        src="http://localhost:9000/files/avatars/{{offer.user.avatar.avatarId}}" class="avatar rounded-3">
+      <ng-template #placeholderAvatar>
+        <img src="/assets/user-icon.png" class="avatar rounded-3">
+      </ng-template>
+      <span class="ms-2 font-16">{{offer.user.userName}}</span>
+      <p class="font-16 my-2">
+        <span><i class="bi bi-person"></i></span> {{offer.user.firstName}} {{offer.user.lastName}}<br>
+        <span><i class="bi bi-geo-alt-fill"></i></span> {{offer.user.city.name}}<br>
+        <span><i class="bi bi-envelope-at-fill"></i></span> {{offer.user.email}}<br>
+    </div>
   </div>
+  <hr>
   <button *ngIf="isUserOwner()==false && offer.quantity>0" class="btn btn-primary" (click)="buy()">Buy</button>
-  <ng-container *ngIf="isUserOwner">
+  <ng-container *ngIf="isUserOwner()">
     <button *ngIf="offer.deleted==false; else undoButton" class="btn btn-danger" (click)="delete()">Delete</button>
     <ng-template #undoButton>
       <button class="btn btn-secondary" (click)="undoDeletion()">Undo deletion</button>
     </ng-template>
   </ng-container>
 </div>
-<div class="container-md" *ngIf="isUserLoggedIn()==true && isUserOwner()==false" [formGroup]="questionForm">
+<div class="container-md mt-3" *ngIf="isUserLoggedIn()==true && isUserOwner()==false  && offer.quantity>0" [formGroup]="questionForm">
   <label for="question" class="form-label">Ask question</label>
   <textarea class="form-control" id="question" formControlName="text" rows="10"></textarea>
-  <button class="btn btn-primary" (click)="sendQuestion()">Send</button>
+  <div *ngIf="text?.invalid && (text?.dirty || text?.touched)" class="alert alert-danger">
+
+    <div *ngIf="text?.errors?.['required']">
+      Question is required.
+    </div>
+    <div *ngIf="text?.errors?.['pattern']">
+      Question must not be blank or only whitespaces.
+    </div>
+  </div>
+  <button class="btn btn-primary mt-3" (click)="sendQuestion()" [disabled]="questionForm.invalid">Send</button>
 </div>
-<div class="container-md">
-  <ng-container *ngFor="let question of offer.questions">
-    <div class="row justify-content-start">
-      <div *ngIf="question.user.avatar" class="col-1">
-        <img src="http://localhost:8080/files/avatars/{{question.user.avatar.avatarId}}" class="avatar-image">
-      </div>
-      <div class="col bg-info">
-        <p>{{question.text}}</p>
-        <button *ngIf="isUserOwner()" class="btn btn-info" (click)="openAnswerDialog(question)" [disabled]="question.answer">Answer</button>
-      </div>
-      <div class="row justify-content-end" *ngIf="question.answer">
-        <div class="col-10 bg-warning">
-          <p>{{question.answer.text}}</p>
+<div class="container-md mt-3">
+  <hr>
+  <h2>Questions</h2>
+  <div class="komentari-kontejner">
+
+    <ng-container *ngFor="let question of offer.questions">
+      <!-- <img *ngIf="question.user.avatar; else placeholderAvatar"
+                  src="http://localhost:8080/files/avatars/{{question.user.avatar.avatarId}}" class="avatar-image">
+                <ng-template #placeholderAvatar>
+                  <img src="/assets/user-icon.png" class="avatar-image">
+                </ng-template> -->
+      <div class="row justify-content-start my-2">
+        <!-- <div class="col-1">
+          <img *ngIf="question.user.avatar; else placeholderAvatar" src="http://localhost:8080/files/avatars/{{question.user.avatar.avatarId}}" class="avatar-image">
+          <ng-template #placeholderAvatar>
+            <img src="/assets/user-icon.png" class="avatar-image">
+          </ng-template>
+        </div> -->
+        <div class="col-auto bg-info rounded-3 p-2" style="min-width: 284px !important;">
+          <div class="mb-2">
+            <img *ngIf="question.user.avatar; else placeholderAvatar"
+            src="http://localhost:9000/files/avatars/{{question.user.avatar.avatarId}}" class="avatar-chat rounded-3">
+            <ng-template #placeholderAvatar>
+              <img src="/assets/user-icon.png" class="avatar-chat rounded-3">
+            </ng-template>
+            <span class="ms-2">{{question.user.userName}}</span>
+          </div>
+          <p class="word-wrap text-break">{{question.text}}</p>
+          <button *ngIf="isUserOwner() && offer.quantity>0" class="btn btn-outline-primary" (click)="openAnswerDialog(question)" [disabled]="question.answer">Answer</button>
+        </div>
+        <div class="row justify-content-end my-1" *ngIf="question.answer">
+          <div class="col-auto bg-info-subtle rounded-3 p-2" style="min-width: 284px !important;">
+            <p class="word-wrap text-break">{{question.answer.text}}</p>
+          </div>
         </div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+  </div>
 </div>
 </ng-container>

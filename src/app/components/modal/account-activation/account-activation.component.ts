@@ -1,7 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup,Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { notEmptyNotBlankRegex } from 'src/app/app.module';
 import { UserDTO } from 'src/app/model/user-dto';
 import { LoginService } from 'src/app/services/login.service';
 
@@ -11,12 +13,16 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./account-activation.component.scss']
 })
 export class AccountActivationComponent {
-  constructor(private loginService: LoginService, private formBuilder: FormBuilder, private dialogRef: MatDialogRef<AccountActivationComponent>,@Inject(MAT_DIALOG_DATA) public user: UserDTO){}
+  constructor(private snackBar: MatSnackBar,private loginService: LoginService, private formBuilder: FormBuilder, private dialogRef: MatDialogRef<AccountActivationComponent>,@Inject(MAT_DIALOG_DATA) public user: UserDTO){}
 
   activationForm: FormGroup = this.formBuilder.group({
-    "pin": this.formBuilder.control(''),
-    "userId": this.formBuilder.control(0)
+    "pin": ['',[Validators.required, Validators.pattern(notEmptyNotBlankRegex)]],
+    "userId": [0]
   })
+
+  get pin(){
+    return this.activationForm.get('pin')
+  }
 
   activate(){
     //let userId = localStorage.getItem("userId")
@@ -25,7 +31,7 @@ export class AccountActivationComponent {
     console.log(this.activationForm.value)
     this.loginService.activate(this.activationForm.value, this.user.userId).subscribe({
       next: (data: UserDTO) => this.dialogRef.close(true),
-      error: (err: HttpErrorResponse) => console.log(err)
+      error: (err: HttpErrorResponse) => {console.log(err); this.snackBar.open('Code is not valid', 'OK', {duration: 5000})}
     })
   }
 

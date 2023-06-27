@@ -1,16 +1,25 @@
 <div class="container-md">
-  <div class="row justify-content-center align-items-center">
+  <div *ngIf="purchases.length==0" class="alert alert-info mt-5 centrirano-alert-md">
+    <p>You have no purchases yet</p>
+  </div>
+  <div *ngIf="purchases.length>0" class="row justify-content-center align-items-center">
     <ng-container *ngFor="let purchase of purchases">
       <div class="col-auto mt-2">
         <div class="card" style="width: 18rem">
-          <img
-            src="https://ichef.bbci.co.uk/news/976/cpsprodpb/114BC/production/_127844807_henry_daniella_hutchinson.jpg"
-            class="card-img-top" />
+          <ng-container *ngIf="purchase.offer.pictures && purchase.offer.pictures.length>0; else placeholderImage">
+            <img src="http://localhost:9000/files/pictures/{{purchase.offer.pictures[0].pictureId}}" class="card-img-top" style="height: 222px; object-fit:contain" />
+          </ng-container>
+          <ng-template #placeholderImage>
+            <a title="Flanoz, CC0, via Wikimedia Commons"
+              href="https://commons.wikimedia.org/wiki/File:Placeholder_view_vector.svg"><img alt="Placeholder view vector"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/256px-Placeholder_view_vector.svg.png"
+                class="card-img-top" style="height: 222px; object-fit:contain"></a>
+          </ng-template>
           <div class="card-body">
-            <h5 class="card-title">{{ purchase.offer.title }}</h5>
+            <h4 class="card-title">{{ purchase.offer.title }}</h4>
             <p class="card-text">
-              {{ purchase.offer.price }}<br />
-              quanity: {{ purchase.quantity }}
+              {{ purchase.offer.price }}$<br />
+              Purchased quanity: {{ purchase.quantity }}
             </p>
             <a class="btn btn-primary" routerLink="/offers/{{ purchase.offer.offerId }}">Offer details</a>
           </div>
@@ -18,8 +27,9 @@
       </div>
     </ng-container>
   </div>
-  <div class="row justify-content-center">
-    <nav class="col-auto" aria-label="Page navigation example">
+  <!-- stranice -->
+  <div *ngIf="purchases.length>0" class="row justify-content-center centrirano my-2">
+    <nav class="col-auto">
       <ul class="pagination">
         <li class="page-item">
           <button class="page-link" (click)="getPurchases(currentPage - 1, 10)"

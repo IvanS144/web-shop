@@ -6,6 +6,7 @@ import { OffersService } from 'src/app/services/offers.service';
 import { OffersPage } from 'src/app/model/offers-page';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CategoriesService } from 'src/app/services/categories.service';
+import { positiveNumberOrNullValidator, positiveNumberValidator, priceRangeValidator } from 'src/app/app.module';
 
 @Component({
   selector: 'app-offers',
@@ -19,17 +20,26 @@ export class OffersComponent {
   pageSize: number = 1;
   currentPage: number = 1;
   categories: CategoryDTO[] = []
+  filterMode: boolean=false;
 
   filterByAttributesForm: FormGroup = this.formBuilder.group({
-    "categoryId": this.formBuilder.control(0),
+    "categoryId": [null],
     "attributes": this.formBuilder.array(
       []
     ),
-    "priceFrom": this.formBuilder.control(0),
-    "priceTo": this.formBuilder.control(-1),
-    "onlyNew": this.formBuilder.control(false),
-    "text": this.formBuilder.control('')
-  });
+    "priceFrom": [null, [positiveNumberOrNullValidator]],
+    "priceTo": [null, [positiveNumberOrNullValidator]],
+    "onlyNew": [false],
+    "text": [null]
+  }, { validators: priceRangeValidator });
+
+  get priceFrom() {
+    return this.filterByAttributesForm.get('priceFrom')
+  }
+
+  get priceTo() {
+    return this.filterByAttributesForm.get('priceTo')
+  }
 
   get attributesFormArray(): FormArray {
     return (this.filterByAttributesForm.controls["attributes"] as FormArray)
@@ -48,32 +58,50 @@ export class OffersComponent {
           {
             "attributeId": this.formBuilder.control(attribute.attributeId),
             "name": this.formBuilder.control(attribute.name),
-            "value": this.formBuilder.control('')
+            "value": [null]
           }
         ))
       }
     }
   }
 
-  onCategorySelected(category: CategoryDTO) {
+  onCategorySelected(category: CategoryDTO | null | undefined) {
     this.attributesFormArray.clear();
-    for (var attribute of category.attributes) {
-      this.attributesFormArray.push(this.formBuilder.group(
-        {
-          id: this.formBuilder.control(attribute.attributeId),
-          name: this.formBuilder.control(attribute.name),
-          value: this.formBuilder.control('')
-        }
-      ))
+    if (category) {
+      for (var attribute of category.attributes) {
+        this.attributesFormArray.push(this.formBuilder.group(
+          {
+            "attributeId": this.formBuilder.control(attribute.attributeId),
+            "name": this.formBuilder.control(attribute.name),
+            "value": [null]
+          }
+        ))
+      }
     }
 
   }
 
-  sendSearchRequest(page: number = 0, pageSize: number = 2) {
-    this.filterByAttributesForm.patchValue({ "categoryId": this.selectedCategory?.categoryId })//! koristen ?
+  sendSearchRequest(page: number = 0, pageSize: number = 10, includeFilters: boolean = false) {
+    if(includeFilters == false){
+      console.log("get")
+      this.filterMode=false;
+      this.getAll(page, pageSize)
+    }
+    else{
+    this.filterMode=true;
+    if (this.selectedCategory)
+      this.filterByAttributesForm.patchValue({ "categoryId": this.selectedCategory?.categoryId })//! koristen ?
+    if (this.filterByAttributesForm.get('text')?.value == '') {
+      this.filterByAttributesForm.patchValue({ "text": null })
+    }
+
+    console.log(this.filterByAttributesForm.value);
+
+
     this.offersService.search(this.filterByAttributesForm.value, page, pageSize)
       .subscribe({
         next: (data: OffersPage) => {
+          console.log(data)
           this.offers = data.content
           this.totalPages = data.totalPages
           this.currentPage = page
@@ -82,6 +110,7 @@ export class OffersComponent {
           console.log(err);
         }
       })
+    }
   }
 
   getAll(page: number = 0, pageSize: number = 10) {
@@ -99,12 +128,22 @@ export class OffersComponent {
       })
   }
 
-  getCategories(){
+  getCategories() {
     this.categoriesService.getAll()
-    .subscribe({
-      next: (data: CategoryDTO[]) => this.categories = data,
-      error: (err: HttpErrorResponse) => console.log(err)
-    })
+      .subscribe({
+        next: (data: CategoryDTO[]) => this.categories = data,
+        error: (err: HttpErrorResponse) => console.log(err)
+      })
+  }
+
+  clear(){
+    this.filterByAttributesForm.reset()
+    this.selectedCategory = undefined;
+  }
+
+  clearFilters(){
+    this.filterMode=false
+    this.getAll()
   }
 
 }

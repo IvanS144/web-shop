@@ -1,13 +1,57 @@
 <div class="container-md" [formGroup]="profileForm" *ngIf="user">
-  <label for="firstName" class="form-label">First name</label>
-  <input type="text" class="form-control" id="firstName" formControlName="firstName" [disabled]="editMode==false" />
-  <label for="lastName" class="form-label">Last name</label>
-  <input type="text" class="form-control" id="lastName" formControlName="lastName" [disabled]="editMode==false" />
-  <label for="email" class="form-label">Email</label>
-  <input type="text" class="form-control" id="email" formControlName="email" [disabled]="editMode==false"/>
-  <label for="passowrd" class="form-label">Password</label>
-  <input type="password" class="form-control" id="password" formControlName="password" [disabled]="editMode==false"/>
-  <mat-form-field>
+  <ng-container *ngIf="user.avatar; else placeholderAvatar">
+    <img src="http://localhost:9000/files/avatars/{{user.avatar.avatarId}}" class="img-avatar border border-3 border-primary rounded-3">
+  </ng-container>
+  <ng-template #placeholderAvatar>
+<img src="assets/user-icon.png" class="img-avatar border border-3 border-primary rounded-3">
+  </ng-template>
+  <p id="userName" class="text-primary text-center fs-1">{{user.userName}}</p>
+  <div class="forma-kontejner">
+    <label for="firstName" class="form-label mt-2">First name</label>
+    <input type="text" class="form-control" id="firstName" formControlName="firstName" />
+    <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="alert alert-danger">
+
+      <div *ngIf="firstName?.errors?.['required']">
+        First name is required.
+      </div>
+      <div *ngIf="firstName?.errors?.['pattern']">
+        First name must not be blank or only whitespaces.
+      </div>
+    </div>
+  <label for="lastName" class="form-label mt-2">Last name</label>
+  <input type="text" class="form-control" id="lastName" formControlName="lastName"/>
+  <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="alert alert-danger">
+
+    <div *ngIf="lastName?.errors?.['required']">
+      Last name is required.
+    </div>
+    <div *ngIf="lastName?.errors?.['pattern']">
+      Last name must not be blank or only whitespaces.
+    </div>
+  </div>
+  <label for="email" class="form-label mt-2">Email</label>
+  <input type="text" class="form-control" id="email" formControlName="email"/>
+  <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="alert alert-danger">
+
+    <div *ngIf="email?.errors?.['required']">
+      Email is required.
+    </div>
+    <div *ngIf="email?.errors?.['email']">
+      Enter correct email format.
+    </div>
+  </div>
+  <label for="passowrd" class="form-label mt-2">Password</label>
+  <input type="password" class="form-control" id="password" formControlName="password" />
+  <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="alert alert-danger">
+
+    <div *ngIf="password?.errors?.['required']">
+      Password is required.
+    </div>
+    <div *ngIf="password?.errors?.['pattern']">
+      Password must not be blank or only whitespaces.
+    </div>
+  </div>
+  <mat-form-field class="mt-2">
     <mat-label>City</mat-label>
     <mat-select [(ngModel)]="selectedCity" [ngModelOptions]="{ standalone: true }" [compareWith]="compareCities"
       (selectionChange)="onCitySelected($event.value)" [disabled]="editMode==false">
@@ -18,10 +62,19 @@
       </ng-container>
     </mat-select>
   </mat-form-field>
+  <div *ngIf="cityId?.invalid && (cityId?.dirty || cityId?.touched)" class="alert alert-danger">
+
+    <div *ngIf="cityId?.errors?.['required']">
+      City is required.
+    </div>
+  </div>
   <ng-container *ngIf="editMode==true">
-    <label for="avatar" class="form-label">Change avatar</label>
-    <input type="file" class="form-control" id="avatar" (change)="onAvatarSelected($event)">
+    <div class="my-2">
+      <label for="avatar" class="form-label mt-2">Change avatar</label>
+      <input type="file" class="form-control" id="avatar" (change)="onAvatarSelected($event)">
+    </div>
   </ng-container>
-  <button *ngIf="editMode == true" class="btn btn-peimary mt-3" (click)="sendEditRequest()">Ok</button>
-  <button class="btn btn-primary mt-3" (click)="toggleEditMode()">{{editButtonText}}</button>
+  <button *ngIf="editMode == true" class="btn btn-primary mt-3 form-dugme" style="padding-top:7px; display: block;" (click)="sendEditRequest()" [disabled]="profileForm.invalid">Ok</button>
+  <button class="btn mt-3 form-dugme" [ngClass]="editMode == false ? 'btn-primary': 'btn-secondary'" style="padding-top:7px; display: block;" (click)="toggleEditMode()">{{editButtonText}}</button>
+</div>
 </div>

@@ -1,20 +1,45 @@
-<div class="container" [formGroup]="orderForm">
-<label for="quantity" class="form-label">Quantity</label>
-<input type="number" min="1" max="{{offer.quantity}}" class="form-control" id="quantity" formControlName="quantity">/{{offer.quantity}}
-<mat-form-field>
-  <mat-label>Payment option</mat-label>
-  <mat-select [(ngModel)]="selectedPaymentOption" [ngModelOptions]="{ standalone: true }"
-    (selectionChange)="onPaymentOptionSelected($event.value)">
-    <ng-container *ngFor="let paymentOption of paymentOptions">
-      <mat-option [value]="paymentOptions">
-        {{ paymentOption.name }}
-      </mat-option>
-    </ng-container>
-  </mat-select>
-</mat-form-field>
-<ng-container *ngIf="cardRequired == true">
-  <label for="card" class="form-label">Card number</label>
-  <input type="text" class="form-control" id="card">
-</ng-container>
-<button class="btn btn-primaty" (click)="sendPurchaseRequest()">Continue</button>
+<mat-dialog-content>
+
+  <div class="container" [formGroup]="orderForm">
+    <label for="quantity-group" class="form-label">Quantity</label>
+    <div class="input-group" id="quantity-group">
+    <input type="number" min="1" max="{{offer.quantity}}" class="form-control" id="quantity"
+    formControlName="quantity"><span class="input-group-text">/{{offer.quantity}}</span>
+  </div>
+  <div *ngIf="quantity?.invalid && (quantity?.dirty || quantity?.touched)" class="alert alert-danger">
+
+    <div *ngIf="quantity?.errors?.['required']">
+      Quantity is required.
+    </div>
+    <div *ngIf="quantity?.errors?.['min']">
+      Quantity must be greater than 1
+    </div>
+    <div *ngIf="quantity?.errors?.['max']">
+      Quantity cannot be greater than {{offer.quantity}}
+    </div>
+  </div>
+  <mat-form-field class="d-block mt-2">
+    <mat-label>Payment option</mat-label>
+    <mat-select [(ngModel)]="selectedPaymentOption" [ngModelOptions]="{ standalone: true }"
+      (selectionChange)="onPaymentOptionSelected($event.value)">
+      <ng-container *ngFor="let paymentOption of paymentOptions">
+        <mat-option [value]="paymentOption">
+          {{ paymentOption.name }}
+        </mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="cardRequired == true">
+    <label for="card" class="form-label">Card number</label>
+    <input type="text" class="form-control" id="card">
+  </ng-container>
+  <!-- <div class="my-3">
+    <button class="btn btn-primary me-1" (click)="sendPurchaseRequest()">Continue</button>
+    <button class="btn btn-secondary" (click)="close()">Cancel</button>
+  </div> -->
 </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="btn btn-primary me-1" (click)="sendPurchaseRequest()" [disabled]="orderForm.invalid">Continue</button>
+  <button class="btn btn-secondary" (click)="close()">Cancel</button>
+</mat-dialog-actions>

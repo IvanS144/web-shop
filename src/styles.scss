@@ -2,3 +2,67 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.forma-kontejner {
+  margin-inline: auto;
+  padding-bottom: 50px;
+  padding-top: 20px;
+  max-width: min(90%, 768px);
+}
+
+.dijalog-kontejner .mat-dialog-container{
+  max-width: min(90%, 768px);
+}
+
+.my-class .mat-dialog-container {
+  height: 400px;
+  width: 600px;
+  border-radius: 10px;
+  background: lightcyan;
+  color: #039be5;
+}
+
+mat-dialog-content{
+  max-width: min(90%, 768px);
+}
+
+.centrirano{
+  margin: auto;
+}
+
+.span-60{
+  width:60px;
+}
+
+.span-92{
+  width: 92px;
+}
+
+.font-16{
+  font-size:16px;
+}
+
+.osobina{
+  max-width: min(90%, 200px);
+}
+
+.komentari-kontejner{
+  max-width: min(90%, 576px);
+  margin-inline:auto;
+}
+
+.centrirano-alert-md{
+  max-width: min(90%, 768px);
+  margin-inline: auto;
+}
+
+.klasa{
+  width: min(90%, 768px);
+}
+
+@media only screen and (max-width: 576px) {
+  .forma-kontejner {
+    padding-bottom: 10px;
+    padding-top: 5px;
+  }
+}

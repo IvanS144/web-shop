@@ -1,0 +1,22 @@
+<mat-dialog-content>
+<div class="container" [formGroup]="messageForm">
+  <div class="forma-kontejner">
+    <div class="my-3">
+      <label for="text" class="form-label">Enter your message</label>
+      <textarea id="text" class="form-control" rows="10" formControlName="text"></textarea>
+      <div *ngIf="text?.invalid && (text?.dirty || text?.touched)" class="alert alert-danger">
+
+        <div *ngIf="text?.errors?.['required']">
+          Message is required.
+        </div>
+        <div *ngIf="text?.errors?.['pattern']">
+          Message must not be blank or only whitespaces.
+        </div>
+      </div>
+    </div>
+    <div class="mb-1">
+      <button class="btn btn-primary me-1" (click)="sendMessage()" [disabled]="messageForm.invalid">Send</button>
+      <button class="btn btn-secondary" (click)="clear()">Clear</button>
+    </div>
+  </div>
+</div>

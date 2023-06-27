@@ -1,5 +1,21 @@
-<div class="container" [formGroup]="activationForm">
-  <label for="pin" class="form-label">Enter pin</label>
-  <input type="text" class="form-control" id="pin" formControlName="pin">
-  <button class="btn btn-primary" (click)="activate()">Continute</button>
-</div>
+<mat-dialog-content>
+  <div class="container" [formGroup]="activationForm">
+    <div class="my-3">
+      <label for="pin" class="form-label">Enter pin</label>
+      <input type="text" class="form-control" id="pin" formControlName="pin">
+      <div *ngIf="pin?.invalid && (pin?.dirty || pin?.touched)" class="alert alert-danger">
+
+        <div *ngIf="pin?.errors?.['required']">
+          Pin is required.
+        </div>
+        <div *ngIf="pin?.errors?.['pattern']">
+          Title must not be blank or only whitespaces.
+        </div>
+      </div>
+    </div>
+    <!-- <button class="btn btn-primary mb-1" (click)="activate()">Continute</button> -->
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="start">
+<button class="btn btn-primary mb-1" (click)="activate()" [disabled]="activationForm.invalid">Continute</button>
+</mat-dialog-actions>

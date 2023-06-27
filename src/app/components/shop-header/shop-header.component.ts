@@ -27,7 +27,9 @@ export class ShopHeaderComponent {
   }
 
   contactSupport(){
-    this.dialog.open(SupportComponent)
+    this.dialog.open(SupportComponent, {
+      panelClass: 'my-class'
+    })
   }
 
 }

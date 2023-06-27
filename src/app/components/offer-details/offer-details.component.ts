@@ -7,11 +7,12 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderComponent } from '../modal/order/order.component';
 import { PurchaseDTO } from 'src/app/model/purchase-dto';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QuestionsService } from 'src/app/services/questions.service';
 import { QuestionDTO } from 'src/app/model/question-dto';
 import { AnswerComponent } from '../modal/answer/answer.component';
 import { AnswerDTO } from 'src/app/model/answer-dto';
+import { notEmptyNotBlankRegex } from 'src/app/app.module';
 
 @Component({
   selector: 'app-offer-details',
@@ -25,9 +26,12 @@ export class OfferDetailsComponent {
   questionForm: FormGroup = this.formBuilder.group({
     "offerId": [0],
     "userId": [parseInt(localStorage.getItem("userId")?? "0")],
-    "text": ['']
+    "text": [null, [Validators.required, Validators.pattern(notEmptyNotBlankRegex)]]
   })
   userId: string | null = localStorage.getItem("userId")
+  get text(){
+    return this.questionForm.get('text')
+  }
 
   constructor(private offersService: OffersService, private route: ActivatedRoute, private dialog: MatDialog, private formBuilder: FormBuilder, private questionsService: QuestionsService){}
 
@@ -51,7 +55,7 @@ export class OfferDetailsComponent {
 
   sendQuestion(){
     this.questionsService.sendQuestion(this.questionForm.value).subscribe({
-      next: (data: QuestionDTO) => this.offer.questions.push(data),
+      next: (data: QuestionDTO) => {this.offer.questions.push(data); this.questionForm.reset()},
       error: (err: HttpErrorResponse) => console.log(err)
     })
   }

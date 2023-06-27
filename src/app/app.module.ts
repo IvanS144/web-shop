@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormsModule,ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +14,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import { LoginComponent } from './components/modal/login/login.component';
 import { CreateOfferComponent } from './components/create-offer/create-offer.component';
@@ -26,8 +27,12 @@ import { MyOffersComponent } from './components/my-offers/my-offers.component';
 import { MyPurchasesComponent } from './components/my-purchases/my-purchases.component';
 import { SupportComponent } from './components/modal/support/support.component';
 import { AnswerComponent } from './components/modal/answer/answer.component';
+import { ContactSupportComponent } from './components/contact-support/contact-support.component';
+import { CardComponent } from './components/card/card.component';
 
-export const baseUrl: string = "http://localhost:8080/";
+export const baseUrl: string = "http://localhost:9000/";
+//export const notEmptyNotBlankRegex: string = '^(?!\s*$).+';
+export const notEmptyNotBlankRegex= /^(.|\s)*\S(.|\s)*$/;
 
 @NgModule({
   declarations: [
@@ -44,7 +49,9 @@ export const baseUrl: string = "http://localhost:8080/";
     MyOffersComponent,
     MyPurchasesComponent,
     SupportComponent,
-    AnswerComponent
+    AnswerComponent,
+    ContactSupportComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,
@@ -58,9 +65,44 @@ export const baseUrl: string = "http://localhost:8080/";
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function positiveNumberValidator(control: AbstractControl){
+  if(control.value > 0){
+    return null
+  }
+  else{
+    return {"notPositive": true}
+  }
+
+}
+
+export function priceRangeValidator(control: AbstractControl){
+  const priceFrom = control.get('priceFrom')
+  const priceTo = control.get('priceTo')
+  if(priceFrom && priceTo){
+    if(priceFrom.value && priceTo.value){
+    if(priceTo.value <= priceFrom.value){
+      return {"priceRange": true}
+    }
+  }
+  }
+  return null
+}
+
+export function positiveNumberOrNullValidator(control: AbstractControl){
+  if(control.value && control.value < 0){
+    return {"notPositiveOrNull": true}
+  }
+  else{
+    return null
+  }
+
+}
+

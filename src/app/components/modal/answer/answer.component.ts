@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { notEmptyNotBlankRegex } from 'src/app/app.module';
 import { AnswerDTO } from 'src/app/model/answer-dto';
 import { QuestionDTO } from 'src/app/model/question-dto';
 import { QuestionsService } from 'src/app/services/questions.service';
@@ -16,8 +17,12 @@ export class AnswerComponent {
 
   answerForm: FormGroup = this.formBuilder.group({
     "questionId": [this.question.questionId],
-    "text": ['']
+    "text": ['', [Validators.required, Validators.pattern(notEmptyNotBlankRegex)]]
   })
+
+  get text(){
+    return this.answerForm.get('text');
+  }
 
   sendAnswer(){
     this.questionsService.sendAnswer(this.answerForm.value, this.question.questionId)
@@ -25,9 +30,13 @@ export class AnswerComponent {
       next: (data: AnswerDTO) => this.dialogRef.close(data),
       error: (err: HttpErrorResponse) => {
         console.log(err)
-        this.dialogRef.close(null)
+        this.dialogRef.close()
       }
     })
+  }
+
+  close(){
+    this.dialogRef.close();
   }
 
 }

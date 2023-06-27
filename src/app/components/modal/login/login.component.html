@@ -1,9 +1,28 @@
-<div class="container" [formGroup]="loginForm">
-  <div class="col my-3 gap-2">
-    <label for="userName" class="form-label">User name</label>
-    <input type="text" class="form-control" id="userName" formControlName="userName" />
-    <label for="passowrd" class="form-label mt-3">Password</label>
-    <input type="password" class="form-control" id="password" formControlName="password" />
-    <button class="btn btn-primary mt-3" (click)="login()">Log in</button>
+<mat-dialog-content>
+  <div class="container" [formGroup]="loginForm">
+    <div class="col my-3 gap-2">
+      <label for="userName" class="form-label">User name</label>
+      <input type="text" class="form-control" id="userName" formControlName="userName" />
+      <div *ngIf="userName?.invalid && (userName?.dirty || userName?.touched)" class="alert alert-danger">
+
+        <div *ngIf="userName?.errors?.['required']">
+          User name is required.
+        </div>
+      </div>
+      <label for="passowrd" class="form-label mt-3">Password</label>
+      <input type="password" class="form-control" id="password" formControlName="password" />
+      <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="alert alert-danger">
+
+        <div *ngIf="password?.errors?.['required']">
+          Title is required.
+        </div>
+      </div>
+      <!-- <button class="btn btn-primary mt-3 me-1" (click)="login()">Log in</button>
+      <button class="btn btn-secondary mt-3" (click)="close()">Cancel</button> -->
+    </div>
   </div>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions align="start">
+  <button class="btn btn-primary me-1" (click)="login()" [disabled]="loginForm.invalid">Log in</button>
+  <button class="btn btn-secondary" (click)="close()">Cancel</button>
+</mat-dialog-actions>

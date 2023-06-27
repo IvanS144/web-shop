@@ -1,10 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserDTO } from 'src/app/model/user-dto';
 import { LoginService } from 'src/app/services/login.service';
 import { AccountActivationComponent } from '../account-activation/account-activation.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +14,20 @@ import { AccountActivationComponent } from '../account-activation/account-activa
 })
 export class LoginComponent {
 
-  constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef<LoginComponent>, private loginService:LoginService, private dialog: MatDialog){}
+  constructor(private snackBar: MatSnackBar,private formBuilder: FormBuilder, private dialogRef: MatDialogRef<LoginComponent>, private loginService:LoginService, private dialog: MatDialog){}
 
   loginForm: FormGroup = this.formBuilder.group({
-    "userName": this.formBuilder.control(''),
-    "password": this.formBuilder.control('')
+    "userName":['',[Validators.required]],
+    "password": ['',[Validators.required]]
   })
+
+  get userName(){
+    return this.loginForm.get('userName')
+  }
+
+  get password(){
+    return this.loginForm.get('password')
+  }
 
   login(){
     this.loginService.login(this.loginForm.value)
@@ -44,9 +53,13 @@ export class LoginComponent {
 
         }
       },
-      error: (err: HttpErrorResponse) => console.log(err)//TODO prikaz obavještenja
+      error: (err: HttpErrorResponse) => {console.log(err);this.snackBar.open('Login failed', 'OK', {duration:5000})}
     })
 
+  }
+
+  close(){
+    this.dialogRef.close();
   }
 
 }

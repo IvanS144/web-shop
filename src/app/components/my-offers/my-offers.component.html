@@ -1,37 +1,41 @@
 <div class="container-md">
-  <div class="row justify-content-center align-items-center">
+  <div *ngIf="offers.length==0" class="alert alert-info mt-5 centrirano-alert-md">
+    <p>You have no offers yet</p>
+  </div>
+  <div *ngIf="offers.length>0" class="row justify-content-center align-items-center">
     <ng-container *ngFor="let offer of offers">
       <div class="col-auto mt-2">
         <div class="card" style="width: 18rem">
           <ng-container *ngIf="offer.pictures && offer.pictures.length>0; else placeholderImage">
             <img
-            src="http://localhost:8080/files/pictures/{{offer.pictures[0].pictureId}}"
-            class="card-img-top" />
+            src="http://localhost:9000/files/pictures/{{offer.pictures[0].pictureId}}"
+            class="card-img-top" style="height: 222px; object-fit:contain"/>
           </ng-container>
           <ng-template #placeholderImage>
 <a title="Flanoz, CC0, via Wikimedia Commons"
   href="https://commons.wikimedia.org/wiki/File:Placeholder_view_vector.svg"><img
     alt="Placeholder view vector"
-    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/256px-Placeholder_view_vector.svg.png" class="card-img-top"></a>
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/256px-Placeholder_view_vector.svg.png" class="card-img-top" style="height: 222px; object-fit:contain"></a>
           </ng-template>
           <div class="card-body">
-            <h4 class="card-title">{{ offer.title }}<span *ngIf="offer.deleted == true" class="badge text-bg-danger">Deleted</span><span *ngIf="offer.quantity == 0" class="badge text-bg-info">Concluded</span></h4>
+            <h4 class="card-title">{{ offer.title }}<span *ngIf="offer.deleted == true" class="badge text-bg-danger mx-1">Deleted</span><span *ngIf="offer.quantity == 0" class="badge text-bg-info mx-1">Concluded</span></h4>
             <p class="card-text">
-              {{ offer.price }}<br />
+              {{ offer.price }}$<br />
               avaliable: {{ offer.quantity }}
             </p>
             <a class="btn btn-primary" routerLink="/offers/{{ offer.offerId }}">Details</a>
-            <button *ngIf="offer.deleted==false; else undoButton" class="btn btn-danger" (click)="delete(offer)">Delete</button>
+            <button *ngIf="offer.deleted==false; else undoButton" class="btn btn-danger ms-1" (click)="delete(offer)">Delete</button>
             <ng-template #undoButton>
-              <button class="btn btn-secondary" (click)="undoDeletion(offer)">Undo deletion</button>
+              <button class="btn btn-secondary ms-1" (click)="undoDeletion(offer)">Undo deletion</button>
             </ng-template>
           </div>
         </div>
       </div>
     </ng-container>
   </div>
-  <div class="row justify-content-center">
-    <nav class="col-auto" aria-label="Page navigation example">
+  <!-- stranice -->
+  <div *ngIf="offers.length>0" class="row justify-content-center centrirano my-2">
+    <nav class="col-auto">
       <ul class="pagination">
         <li class="page-item">
           <button class="page-link" (click)="getOffers(currentPage - 1, 10)"
