@@ -29,7 +29,7 @@ export class OffersComponent {
     ),
     "priceFrom": [null, [positiveNumberOrNullValidator]],
     "priceTo": [null, [positiveNumberOrNullValidator]],
-    "onlyNew": [false],
+    "isNew": [false],
     "text": [null]
   }, { validators: priceRangeValidator });
 
